@@ -49,18 +49,12 @@ def validate_config():
         raise ValueError(f"Missing required environment variables: {', '.join(missing_vars)}")
     
     # Validate SUMMARY_CHANNEL format
-    if not SUMMARY_CHANNEL.startswith('#'):
+    if SUMMARY_CHANNEL and not SUMMARY_CHANNEL.startswith('#'):
         logger.warning(f"SUMMARY_CHANNEL should start with '#'. Current value: {SUMMARY_CHANNEL}")
 
-# Initialize clients
-try:
-    validate_config()
-    slack_token = os.getenv('SLACK_BOT_TOKEN')
-    client = AsyncWebClient(token=slack_token)
-    openai_client = AsyncOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-except Exception as e:
-    logger.error(f"Failed to initialize clients: {e}")
-    raise
+# Initialize clients - will be done in main()
+client = None
+openai_client = None
 
 async def get_bot_channels() -> Tuple[Optional[str], List[Dict[str, str]]]:
     """
@@ -440,7 +434,14 @@ async def main() -> None:
     This function orchestrates the entire process of fetching messages,
     generating summaries, and posting the results to a Slack channel.
     """
+    global client, openai_client
+    
     try:
+        # Initialize clients
+        validate_config()
+        slack_token = os.getenv('SLACK_BOT_TOKEN')
+        client = AsyncWebClient(token=slack_token)
+        openai_client = AsyncOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
         # Check time range first
         start_time, end_time = get_time_range()
         if start_time is None:
