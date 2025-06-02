@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  slackinsights:
+    build: .
+    container_name: slackinsights
+    env_file:
+      - .env
+    restart: unless-stopped
+    environment:
+      - LOG_LEVEL=INFO
+    # For scheduled runs, use with external scheduler like cron
+    # Or uncomment below for continuous running with internal scheduling
+    # command: sh -c "while true; do python slack_summary_bot.py; sleep 86400; done"
