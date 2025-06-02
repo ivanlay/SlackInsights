@@ -458,30 +458,34 @@ async def main() -> None:
         
         channel_data = await process_channels(channels, bot_user_id)
 
-    # Create a dummy session to maintain compatibility with existing function signatures
-    async with aiohttp.ClientSession() as session:
-        tasks = [
-            asyncio.create_task(get_summary(session, channel['messages']))
-            for channel in channel_data
-            if channel['messages']
-        ]
-        
-        summaries = await asyncio.gather(*tasks)
-        
-        for channel, summary in zip((c for c in channel_data if c['messages']), summaries):
-            channel['summary'] = summary
+        # Create a dummy session to maintain compatibility with existing function signatures
+        async with aiohttp.ClientSession() as session:
+            tasks = [
+                asyncio.create_task(get_summary(session, channel['messages']))
+                for channel in channel_data
+                if channel['messages']
+            ]
+            
+            summaries = await asyncio.gather(*tasks)
+            
+            for channel, summary in zip((c for c in channel_data if c['messages']), summaries):
+                channel['summary'] = summary
 
-    blocks = create_slack_message_blocks(channel_data)
+        blocks = create_slack_message_blocks(channel_data)
 
-    try:
-        await client.chat_postMessage(
-            channel=SUMMARY_CHANNEL,
-            blocks=blocks,
-            text=SUMMARY_TITLE
-        )
-        logger.info(f"Summary posted successfully to {SUMMARY_CHANNEL}")
-    except SlackApiError as e:
-        logger.error(f"Error posting message to {SUMMARY_CHANNEL}: {e.response.get('error', str(e))}")
+        try:
+            await client.chat_postMessage(
+                channel=SUMMARY_CHANNEL,
+                blocks=blocks,
+                text=SUMMARY_TITLE
+            )
+            logger.info(f"Summary posted successfully to {SUMMARY_CHANNEL}")
+        except SlackApiError as e:
+            logger.error(f"Error posting message to {SUMMARY_CHANNEL}: {e.response.get('error', str(e))}")
+            raise
+    
+    except Exception as e:
+        logger.error(f"Error in main function: {e}")
         raise
 
 if __name__ == "__main__":
