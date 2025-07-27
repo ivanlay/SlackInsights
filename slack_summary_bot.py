@@ -21,7 +21,7 @@ IGNORE_CHANNELS = (
 )
 SUMMARY_TITLE = os.getenv("SUMMARY_TITLE", "Customer Channel Summary")
 
-RUN_DAILY = True  # Set to True for daily runs, False to skip weekends
+RUN_DAILY = os.getenv("RUN_DAILY", "true").lower() == "true"
 
 # Setup logging
 log_level = os.getenv("LOG_LEVEL", "INFO").upper()

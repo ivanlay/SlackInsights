@@ -73,11 +73,12 @@ python test_setup.py
 | `IGNORE_CHANNELS` | Comma-separated channel IDs to skip | `C1234567890,C0987654321` |
 | `SUMMARY_TITLE` | Title for summary messages (optional) | `Customer Channel Summary` |
 | `LOG_LEVEL` | Logging level (optional) | `INFO` |
+| `RUN_DAILY` | Run every day (`true`) or skip weekends (`false`) | `true` |
 
 ### Bot Settings
 
-In `slack_summary_bot.py`:
-- `RUN_DAILY`: Set to `True` for daily runs, `False` to skip weekends
+In `.env`:
+- `RUN_DAILY`: Set to `true` for daily runs, `false` to skip weekends
 
 ## Usage
 
