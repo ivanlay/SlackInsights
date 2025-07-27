@@ -16,7 +16,7 @@ from openai import AsyncOpenAI
 load_dotenv()
 
 
-async def test_slack_connection():
+async def check_slack_connection():
     """Test Slack API connection and permissions."""
     print("🔍 Testing Slack connection...")
 
@@ -81,7 +81,7 @@ async def test_slack_connection():
         return False
 
 
-async def test_openai_connection():
+async def check_openai_connection():
     """Test OpenAI API connection."""
     print("\n🔍 Testing OpenAI connection...")
 
@@ -160,8 +160,8 @@ async def main():
         sys.exit(1)
 
     # Test connections
-    slack_ok = await test_slack_connection()
-    openai_ok = await test_openai_connection()
+    slack_ok = await check_slack_connection()
+    openai_ok = await check_openai_connection()
 
     # Summary
     print("\n" + "=" * 50)

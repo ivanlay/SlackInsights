@@ -182,6 +182,7 @@ slackinsights/
 ```bash
 python -m pytest tests/
 ```
+All unit tests are stored in the `tests/` directory.
 
 ## Contributing
 
